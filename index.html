@@ -302,6 +302,9 @@
   <div class="impl-category">
     <h3>Indexers &amp; infrastructure</h3>
     <ul>
+      <li><a href="https://nostr.social/">nostr.social</a>
+        <span class="desc">live directory and resolver for did:nostr identities; serves DID docs at <code>/.well-known/did/nostr/&lt;pubkey&gt;.json</code> (hosted <a href="https://github.com/JavaScriptSolidServer/beacon">beacon</a>)</span>
+        <span class="lang">service</span></li>
       <li><a href="https://github.com/JavaScriptSolidServer/beacon">beacon</a>
         <span class="desc">did:nostr social-graph indexer (profiles + follows + relays) on MongoDB</span>
         <span class="lang">JS</span></li>
@@ -359,9 +362,11 @@
 <section id="resolver">
   <h2>Resolver <span class="pill">coming soon</span></h2>
   <div class="soon">
-    A live resolver, where you paste an <code>npub</code> or hex pubkey and watch its did:nostr
-    document resolve in the browser, is planned. It will run the full resolution chain (pod
-    well-known endpoints plus Nostr relays), not a single host.
+    A live directory and resolver already runs at <a href="https://nostr.social/">nostr.social</a>,
+    where you can browse did:nostr identities and fetch their DID documents. An in-browser widget,
+    where you paste an <code>npub</code> or hex pubkey and watch its document resolve here, is
+    planned; it will run the full resolution chain (pod well-known endpoints plus Nostr relays),
+    not a single host.
   </div>
 </section>
 
