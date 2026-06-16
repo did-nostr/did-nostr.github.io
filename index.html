@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>did:nostr — a Nostr key is a decentralized identifier</title>
+<meta name="description" content="did:nostr is a DID method where a Nostr public key resolves to a W3C DID document. No registry, no chain — the key you already have is your identifier.">
+<meta property="og:title" content="did:nostr">
+<meta property="og:description" content="A Nostr key is a decentralized identifier. did:nostr:<pubkey> resolves to a W3C DID document.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ctext%20y%3D%2218%22%20font-size%3D%2218%22%3E%F0%9F%97%9D%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --accent:#6b21a8; --bg:#fdfdfd; --code-bg:#f4f2f7; --line:#e6e3ec; }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: var(--fg); background: var(--bg); line-height: 1.6;
+    max-width: 720px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  h1 { font-size: 2rem; margin: 0 0 .25rem; letter-spacing: -.02em; }
+  h2 { font-size: 1.25rem; margin: 2.5rem 0 .75rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+  h3 { font-size: 1rem; margin: 1.5rem 0 .4rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; font-weight: 600; }
+  code { background: var(--code-bg); padding: .12em .4em; border-radius: 4px; font-size: .9em; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  pre { background: var(--code-bg); padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: .82rem; line-height: 1.5; }
+  pre code { background: none; padding: 0; }
+  .tagline { font-size: 1.15rem; color: var(--muted); margin: 0 0 1rem; }
+  .toplinks { font-size: .9rem; margin-bottom: .5rem; }
+  .toplinks a { margin-right: 1rem; white-space: nowrap; }
+  ol { padding-left: 1.25rem; }
+  ol li { margin: .5rem 0; }
+  ul.eco { list-style: none; padding: 0; margin: .4rem 0 1rem; }
+  ul.eco li { margin: .35rem 0; padding-left: 1.1rem; position: relative; }
+  ul.eco li::before { content: "→"; position: absolute; left: 0; color: var(--accent); }
+  .muted { color: var(--muted); }
+  .pill { display: inline-block; font-size: .72rem; background: var(--code-bg); color: var(--accent); border: 1px solid var(--line); border-radius: 999px; padding: .05em .6em; vertical-align: middle; }
+  .soon { border: 1px dashed var(--line); border-radius: 8px; padding: 1rem 1.1rem; color: var(--muted); background: #fbfaff; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--line); font-size: .85rem; color: var(--muted); }
+  .did { font-family: ui-monospace, monospace; color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>did:nostr</h1>
+  <p class="tagline">A Nostr key is a decentralized identifier.</p>
+  <p class="toplinks">
+    <a href="https://nostrcg.github.io/did-nostr/">Draft spec ↗</a>
+    <a href="https://github.com/did-nostr">GitHub ↗</a>
+    <a href="https://nip98.com/">NIP-98 ↗</a>
+    <a href="https://www.w3.org/TR/cid-1.0/">CID v1.0 ↗</a>
+  </p>
+</header>
+
+<section>
+  <h2>What is did:nostr?</h2>
+  <p>
+    <strong>did:nostr</strong> is a <a href="https://www.w3.org/TR/did-core/">W3C DID</a> method
+    in which a Nostr public key <em>is</em> the identifier. There is no registry, no ledger, and
+    nothing to mint — the keypair you already use on Nostr resolves directly to a DID document:
+  </p>
+  <pre><code><span class="did">did:nostr:</span>npub-or-32-byte-hex-public-key</code></pre>
+  <p>
+    Resolving that DID yields a document describing the key (as a
+    <a href="https://www.w3.org/TR/cid-1.0/#multikey">Multikey</a>) and, optionally,
+    an <code>alsoKnownAs</code> link to a <a href="https://solidproject.org/TR/protocol#webid">WebID</a> —
+    bridging a Nostr identity into the wider WebID / Solid / Verifiable-Credentials world without
+    giving up self-custody of the key.
+  </p>
+</section>
+
+<section>
+  <h2>How resolution works</h2>
+  <ol>
+    <li><strong>Start with a pubkey.</strong> <code>did:nostr:&lt;hex&gt;</code> — the x-only secp256k1 public key.</li>
+    <li><strong>Fetch the DID document</strong> from a resolver: a pod's well-known endpoint
+        (<code>/.well-known/did/nostr/&lt;pubkey&gt;</code>), or a Nostr-aware resolver such as
+        <code>nostr.social</code> / <code>nostr.rocks</code>, or by querying relays for the key's metadata.</li>
+    <li><strong>Read the verification method.</strong> The key appears as a <code>Multikey</code>
+        with a <code>publicKeyMultibase</code> value, referenced from <code>authentication</code>.</li>
+    <li><strong>Follow <code>alsoKnownAs</code></strong> (if present) to the controller's WebID profile —
+        which declares the <em>same</em> key as a verification method, closing the loop both ways.</li>
+    <li><strong>Authenticate.</strong> The same key signs requests
+        (<a href="https://nip98.com/">NIP-98</a> over HTTP), so resolution and auth share one keypair.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>The DID document</h2>
+  <p class="muted">What a resolver returns for a did:nostr identifier:</p>
+<pre><code>{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://w3id.org/nostr/context"
+  ],
+  "id": "did:nostr:&lt;pubkey&gt;",
+  "type": "DIDNostr",
+  "alsoKnownAs": ["https://alice.example/profile/card#me"],
+  "verificationMethod": [{
+    "id": "did:nostr:&lt;pubkey&gt;#key1",
+    "type": "Multikey",
+    "controller": "did:nostr:&lt;pubkey&gt;",
+    "publicKeyMultibase": "&lt;f-form multibase of the secp256k1 key&gt;"
+  }],
+  "authentication": ["did:nostr:&lt;pubkey&gt;#key1"]
+}</code></pre>
+  <p class="muted">
+    <code>Multikey</code> and <code>publicKeyMultibase</code> are defined by
+    <a href="https://www.w3.org/TR/cid-1.0/">Controlled Identifiers v1.0</a>; the
+    <code>nostr/context</code> adds the Nostr-specific terms.
+  </p>
+</section>
+
+<section>
+  <h2>Ecosystem</h2>
+  <p class="muted">
+    Projects building on did:nostr.
+    Browse them all on the <a href="https://github.com/topics/did-nostr">did-nostr GitHub topic</a> —
+    add the <code>did-nostr</code> topic to your repo to appear here.
+  </p>
+
+  <h3>Servers &amp; pods</h3>
+  <ul class="eco">
+    <li><a href="https://github.com/JavaScriptSolidServer/JavaScriptSolidServer">JavaScriptSolidServer</a> — Solid server; serves DID docs at <code>/.well-known/did/nostr/&lt;pubkey&gt;</code> and resolves did:nostr → WebID for NIP-98 auth <span class="muted">· JS</span></li>
+    <li><a href="https://github.com/DreamLab-AI/solid-pod-rs">solid-pod-rs</a> — Rust-native Solid pod server (LDP + WAC + NIP-98 + OIDC + notifications) <span class="muted">· Rust</span></li>
+  </ul>
+
+  <h3>Libraries &amp; keys</h3>
+  <ul class="eco">
+    <li><a href="https://github.com/block-core/nostr-did-resolver">nostr-did-resolver</a> — library for resolving DID documents for Nostr identities <span class="muted">· TS</span></li>
+    <li><a href="https://github.com/melvincarvalho/noskey">noskey</a> — generate Nostr keys <span class="muted">· JS</span></li>
+  </ul>
+
+  <h3>Indexers &amp; infrastructure</h3>
+  <ul class="eco">
+    <li><a href="https://github.com/JavaScriptSolidServer/beacon">beacon</a> — did:nostr social-graph indexer (profiles + follows + relays) on MongoDB <span class="muted">· JS</span></li>
+    <li><a href="https://github.com/nostr-labs/nostr-beacon">nostr-beacon</a> — Nostr beacon <span class="muted">· JS</span></li>
+  </ul>
+
+  <h3>Clients &amp; apps</h3>
+  <ul class="eco">
+    <li><a href="https://github.com/nostria-app/nostria">Nostria</a> — Nostr social client <span class="muted">· TS</span></li>
+    <li><a href="https://github.com/DreamLab-AI/nostr-rust-forum">nostr-rust-forum</a> — decentralized forum: Leptos WASM client + Solid pods + passkey auth <span class="muted">· Rust</span></li>
+    <li><a href="https://github.com/DreamLab-AI/VisionFlow">VisionFlow</a> — distributed coordination platform for governed AI-agent meshes with self-sovereign data</li>
+    <li><a href="https://github.com/melvincarvalho/aam">aam</a> — autonomous agent manager <span class="muted">· JS</span></li>
+  </ul>
+
+  <h3>Specification &amp; standards</h3>
+  <ul class="eco">
+    <li><a href="https://nostrcg.github.io/did-nostr/">nostrcg/did-nostr</a> — the did:nostr method draft, in the Nostr Community Group <span class="pill">unofficial draft</span></li>
+    <li><a href="https://www.w3.org/TR/cid-1.0/">W3C Controlled Identifiers v1.0</a> — defines Multikey / publicKeyMultibase</li>
+  </ul>
+
+  <h3>Bridges</h3>
+  <ul class="eco">
+    <li><strong>did:nostr ↔ WebID / Solid</strong> — <code>alsoKnownAs</code> links a Nostr key to a Solid identity; the WebID profile declares the same key as a verification method</li>
+    <li><strong>did:nostr ↔ NIP-98</strong> — one keypair resolves <em>and</em> authenticates (<a href="https://nip98.com/">nip98.com</a>)</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Resolver <span class="pill">coming soon</span></h2>
+  <div class="soon">
+    A live resolver — paste an <code>npub</code> or hex pubkey and watch its did:nostr document
+    resolve in the browser — is planned. It will run the full resolution chain (pod well-known
+    endpoints + Nostr relays), not a single host.
+  </div>
+</section>
+
+<section>
+  <h2>Standards</h2>
+  <p>
+    did:nostr builds on <a href="https://www.w3.org/TR/did-core/">W3C DID Core</a> and
+    <a href="https://www.w3.org/TR/cid-1.0/">Controlled Identifiers v1.0</a>. The method draft is
+    developed openly in the <a href="https://nostrcg.github.io/did-nostr/">Nostr Community Group</a>;
+    this site is an independent hub and does not imply Community-Group consensus.
+  </p>
+</section>
+
+<footer>
+  <p>
+    did:nostr — an independent hub for the did:nostr method.
+    Spec: <a href="https://nostrcg.github.io/did-nostr/">nostrcg/did-nostr</a> ·
+    Sibling: <a href="https://nip98.com/">nip98.com</a> ·
+    Source: <a href="https://github.com/did-nostr/did-nostr.github.io">did-nostr.github.io</a>
+  </p>
+</footer>
+
+</body>
+</html>
