@@ -81,9 +81,8 @@ declares in its `@context`.
 }
 ```
 
-> Note: the published draft still lists `https://w3id.org/did` as the first context; the
-> switch to CID v1.0 (which actually defines `Multikey`) is in flight as nostrcg/did-nostr#91.
-> Servers like JavaScriptSolidServer already serve the CID v1.0 form shown here.
+> Note: `https://www.w3.org/ns/cid/v1` leads the `@context` because CID v1.0 is what defines
+> `Multikey` and `publicKeyMultibase`. The did:nostr spec and JavaScriptSolidServer both serve this form.
 
 ### Enhanced (optional fields)
 
