@@ -65,6 +65,7 @@ declares in its `@context`.
 ```json
 {
   "@context": [
+    "https://www.w3.org/ns/did/v1",
     "https://www.w3.org/ns/cid/v1",
     "https://w3id.org/nostr/context"
   ],
@@ -81,8 +82,8 @@ declares in its `@context`.
 }
 ```
 
-> Note: `https://www.w3.org/ns/cid/v1` leads the `@context` because CID v1.0 is what defines
-> `Multikey` and `publicKeyMultibase`. The did:nostr spec and JavaScriptSolidServer both serve this form.
+> Note: the `@context` leads with `https://www.w3.org/ns/did/v1` (required by DID Core, spec 0.1.1),
+> followed by `https://www.w3.org/ns/cid/v1`, which defines `Multikey` and `publicKeyMultibase`.
 
 ### Enhanced (optional fields)
 
@@ -106,7 +107,7 @@ function resolveOffline(did) {
   if (!/^[0-9a-f]{64}$/.test(pub)) throw new Error('invalid did:nostr')
   const id = `did:nostr:${pub}`
   return {
-    '@context': ['https://www.w3.org/ns/cid/v1', 'https://w3id.org/nostr/context'],
+    '@context': ['https://www.w3.org/ns/did/v1', 'https://www.w3.org/ns/cid/v1', 'https://w3id.org/nostr/context'],
     id,
     type: 'DIDNostr',
     verificationMethod: [{
