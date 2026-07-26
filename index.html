@@ -240,6 +240,7 @@
   <p class="muted">The minimal document a resolver returns (derivable from the key alone):</p>
 <pre><code>{
   "@context": [
+    "https://www.w3.org/ns/did/v1",
     "https://www.w3.org/ns/cid/v1",
     "https://w3id.org/nostr/context"
   ],
@@ -256,7 +257,8 @@
 }</code></pre>
   <p class="note">
     The <code>publicKeyMultibase</code> is <code>f</code> (base16) + <code>e701</code> (secp256k1
-    multicodec) + parity byte + the 64-char hex key. <code>Multikey</code> and
+    multicodec) + parity byte + the 64-char hex key. The <code>@context</code> leads with the
+    <a href="https://www.w3.org/TR/did-core/">DID Core</a> context; <code>Multikey</code> and
     <code>publicKeyMultibase</code> are defined by
     <a href="https://www.w3.org/TR/cid-1.0/">Controlled Identifiers v1.0</a>; the
     <code>nostr/context</code> adds the Nostr terms. Enhanced documents may also carry
