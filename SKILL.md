@@ -29,7 +29,7 @@ Convert an `npub` to the hex form before building a DID:
 ```js
 import { nip19 } from 'nostr-tools'
 
-const { data: hex } = nip19.decode('npub1cpxejnc58zpcuyh0pt8gvkzpv34qxceu0sqp7jec2nk9nut7p5zs4zyx4c')
+const { data: hex } = nip19.decode('npub1zfxql2v5quvzanj6ynadndlkvays9lzz9ppaxy5d8zs2l0hqlhfq8fdyst')
 const did = `did:nostr:${hex}`
 // did:nostr:124c0fa99407182ece5a24fad9b7f6674902fc422843d3128d38a0afbee0fdd2
 ```
