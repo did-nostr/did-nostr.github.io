@@ -1,0 +1,7 @@
+# did:nostr
+> A Nostr key is a decentralized identifier.
+
+- Specification: https://nostrcg.github.io/did-nostr/
+- GitHub: https://github.com/did-nostr/did-nostr.github.io
+- Controlled Identifiers v1.0: https://www.w3.org/TR/cid-1.0/
+- Quick guide for agents: https://did-nostr.com/SKILL.md

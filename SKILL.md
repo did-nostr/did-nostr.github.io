@@ -1,5 +1,7 @@
 # did:nostr - A Nostr Key as a Decentralized Identifier
 
+Canonical specification: https://nostrcg.github.io/did-nostr/ — this file is a quick guide; where they differ, the spec wins.
+
 ## Purpose
 
 Turn a Nostr public key into a [W3C DID](https://www.w3.org/TR/did-core/) so any app
@@ -53,6 +55,10 @@ function toMultikey(hexPub) {
 }
 // fe70102124c0fa99407182ece5a24fad9b7f6674902fc422843d3128d38a0afbee0fdd2
 ```
+
+The parity byte is `02` for an even y-coordinate, the default for an x-only key. An implementation that holds the full
+public key (for example one derived by additive tweaking) may meet an odd y-coordinate, encoded as `03`; implementations
+should accept both prefixes, as the spec says.
 
 `Multikey` / `publicKeyMultibase` are defined by
 [W3C Controlled Identifiers v1.0](https://www.w3.org/TR/cid-1.0/), which the DID document
